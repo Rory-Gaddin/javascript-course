@@ -24,3 +24,30 @@ console.log(fullAge);
 
 */
 
+yesNo = function(bool) {
+    if (typeof(bool) != 'Boolean') {
+        Error("You must pass a Boolean value to yesNo");
+    }
+
+    if (bool) {
+        return 'Yes'
+    }
+    else {
+        return 'No'
+    }
+}
+
+// Lecture: variables 2
+var name = 'John';
+var age = 26;
+
+console.log(name + age);
+
+var job, isMarried;
+console.log(job);
+
+job = 'Teacher';
+isMarried = true;
+
+console.log(name + ' ' + age + ' ' + job + ' ' + yesNo(isMarried));
+
