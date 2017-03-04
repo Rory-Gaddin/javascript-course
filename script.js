@@ -5,6 +5,11 @@ Date  : 04 March 2017
 
 */
 
+/*
+
+No longer need the stuff below, because the lecturer can't make up his mind
+about what this file is for!
+
 var name = 'John';
 console.log(name);
 
@@ -16,4 +21,6 @@ console.log(age);
 
 var fullAge = true;
 console.log(fullAge);
+
+*/
 
