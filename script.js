@@ -64,56 +64,69 @@ if(age < 20 && age) {
 
 */
 
+
+// Creates a new contestant object
+function makeNewContestant() {
+    var name = prompt('What is the contestant\'s name?');
+    var age = prompt('What is the contestant\'s age in years?');
+    var height = prompt('What is the contestant\'s height in centimeters?');
+
+    var contestant = {
+        name: name,
+        age: parseInt(age),
+        height: parseInt(height),
+        score: null
+    }
+
+    return contestant;
+}
+
 // Calculates the score from the height and age
-function calcScore(height, age) {
+function calcScoreFromHeightAndAge(height, age) {
     return height + (age * 5);
 }
 
 // Calculates a score, given a particular contestant's name
-function getScoreFromUserInput(name) {
-    // Prompt user for the age and height of each contestant
-    var age = prompt('Enter ' + names[i] + '\'s age');
-    var height = prompt('Enter ' + names[i] + '\'s height');
-
+function getScoreFromHeightAndAge(contestant) {
     // Calculate the score for the contestant
-    var score = calcScore(height, age);
+    var score = calcScoreFromHeightAndAge(contestant.height, contestant.age);
 
     return score;
 }
 
 // Returns a collection of contestant scores, given a list of names
 // and a scoring function
-function getContestantScores(names, scoringFunc) {
-    var scores = [];
-
-    for(i = 0; i < names.length; i++) {
+function getContestantScores(contestants, scoringFunc) {
+    for(i = 0; i < contestants.length; i++) {
         // Add a score for each user, using the configured scoring method
-        scores.push(scoringFunc(names[i]));
+        contestants[i].score = (scoringFunc(contestants[i]));
     }
 
-    return scores;
+    return contestants;
 }
 
 // Determines the maximum score, given a list of calculated scores
-function getMaximumScore(scores) {
+function getMaximumScore(contestants) {
     var maxScore = 0;
 
-    for (i = 0; i < scores.length; i++) {
-        if (scores[i] > maxScore) {
-            maxScore = scores[i];
+    for (i = 0; i < contestants.length; i++) {
+        var score = contestants[i].score;
+
+        if (score > maxScore) {
+            maxScore = score;
         }
     }
 
     return maxScore;
 }
 
-// Returns a list of names of winners, given the winning score
-function getWinnerList(names, scores, winningScore) {
+// Returns a collection of contestants who won, given a winning score
+function getWinners(contestants, winningScore) {
     var winners = [];
 
-    for(i = 0; i < names.length; i++) {
-        if (scores[i] == winningScore) {
-            winners.push(names[i]);
+    for(i = 0; i < contestants.length; i++) {
+        if (contestants[i].score == winningScore) {
+            winners.push(contestants[i]);
         }
     }
 
@@ -125,7 +138,7 @@ function getDeclarationOfVictory(winners, winningScore) {
     var message = '';
 
     if (winners.length == 0) {
-        message = 'Nobody won!';
+        message = 'Nobody won!!  That should never happen, unless you put in some dirty data!';
     } else {
         if (winners.length > 1) {
             message = 'There was a draw by ' + winners.length.toString() + ' contestants!  They were ';
@@ -134,7 +147,7 @@ function getDeclarationOfVictory(winners, winningScore) {
         }
 
         for (i = 0; i < winners.length; i++) {
-            message += winners[i];
+            message += winners[i].name;
 
             if(i < winners.length - 2) {
                 message += ', ';
@@ -155,23 +168,36 @@ function getDeclarationOfVictory(winners, winningScore) {
     return message;
 }
 
+// The main game logic happens here...
+function playGame(contestants) {
+    // Get the scores for all contestants
+    var contestants = getContestantScores(contestants, getScoreFromHeightAndAge);
+
+    // Determine the maximum score
+    var maxScore = getMaximumScore(contestants);
+
+    // Get a list of all winners, based on the scores and max score
+    var winners = getWinners(contestants, maxScore);
+
+    // Shout it from the rooftops!
+    console.log(getDeclarationOfVictory(winners, maxScore));
+}
+
 /*
 ----------------------------------------------------------------------------------------------------------------------------------
 Main program body starts here...
 ----------------------------------------------------------------------------------------------------------------------------------
 */
 
-// Declare the names of all contestants
-var names = ['John', 'Peter', 'Mark'];
+// Create some contestants
+var contestants = [];
 
-// Get the scores for all contestants
-var scores = getContestantScores(names, getScoreFromUserInput);
+while (prompt('Type \'Yes\' if you would like to create a new contestant') == 'Yes') {
+    contestants.push(makeNewContestant());
+}
 
-// Determine the maximum score
-var maxScore = getMaximumScore(scores);
-
-// Get a list of all winners, based on the scores and max score
-var winners = getWinnerList(names, scores, maxScore);
-
-// Shout it from the rooftops!
-console.log(getDeclarationOfVictory(winners, maxScore));
+if (contestants.length == 0) {
+    console.log('No contestants defined!  Looks like nobody wants to play.');
+} else {
+    playGame(contestants);
+}
